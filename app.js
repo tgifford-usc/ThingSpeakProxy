@@ -25,6 +25,10 @@ app.get("/", async (request, response) => {
         const channel = request.query.channel;
         const fieldNumber = request.query.fieldnum;
         const api_key = request.query.api_key;
+        if (channel == undefined || fieldNumber == undefined || api_key == undefined) { 
+            response.json({ message: "This API expects a GET request with URL parameters for channel, fieldnum, and api_key" });
+            return;
+        }        
         const url = generateURL(apiBase, channel, fieldNumber, api_key);
         const apiResponse = await fetch(url, {
           method: 'GET',
@@ -33,7 +37,7 @@ app.get("/", async (request, response) => {
           }
         });
         const result = await apiResponse.json();
-        response.send(result);
+        response.json(result);
     } catch(err) {
       console.log("Error processing thingspeak data request: ", err);
     }
